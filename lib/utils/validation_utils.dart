@@ -114,11 +114,13 @@ class ValidationUtils {
 
   // Validação de URL
   static bool isValidURL(String url) {
-    final urlRegExp = RegExp(
-      r'^(http|https)://[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+([-a-zA-Z0-9._~:/?#[\]@!$&\'()*+,;=]*)?$',
-    );
-    return urlRegExp.hasMatch(url);
+  try {
+    final uri = Uri.parse(url);
+    return (uri.scheme == 'http' || uri.scheme == 'https') && uri.host.isNotEmpty;
+  } catch (e) {
+    return false;
   }
+}
 
   // Validação de senha forte
   static bool isStrongPassword(String password) {

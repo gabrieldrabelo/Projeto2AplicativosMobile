@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import '../controllers/cliente_controller.dart';
 import '../models/client.dart';
@@ -50,7 +52,6 @@ class _ClienteListScreenState extends State<ClienteListScreen> {
   void _showClienteForm({Client? cliente}) {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: cliente?.name ?? '');
-    final typeController = TextEditingController(text: cliente?.type ?? 'F');
     final cpfCnpjController = TextEditingController(text: cliente?.cpfCnpj ?? '');
     final emailController = TextEditingController(text: cliente?.email ?? '');
     final phoneController = TextEditingController(text: cliente?.phone ?? '');

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import '../controllers/produto_controller.dart';
 import '../models/product.dart';
@@ -124,7 +126,7 @@ class _ProdutoListScreenState extends State<ProdutoListScreen> {
                   description: descriptionController.text.isNotEmpty
                       ? descriptionController.text
                       : null,
-                  lastModified: DateTime.now().toIso8601String(),
+                  lastModified: DateTime.now().toIso8601String(), stockQuantity: 0, status: 0,
                 );
 
                 bool success;

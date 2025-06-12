@@ -3,11 +3,8 @@ import '../database/database_helper.dart';
 import '../models/order.dart';
 import '../models/order_item.dart';
 import '../models/order_payment.dart';
-import '../models/product.dart';
 import 'product_controller.dart';
-import '../models/client.dart';
 import 'client_controller.dart';
-import '../utils/logger.dart';
 
 class OrderController {
   final dbHelper = DatabaseHelper.instance;

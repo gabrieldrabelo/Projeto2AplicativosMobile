@@ -7,6 +7,7 @@ class OrderListScreen extends StatefulWidget {
   const OrderListScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _OrderListScreenState createState() => _OrderListScreenState();
 }
 
@@ -123,15 +124,15 @@ class _OrderListScreenState extends State<OrderListScreen> {
                           children: [
                             Text('Client: ${order.clientName}'),
                             Text('Date: ${order.orderDate}'),
-                            Text('Total: $${order.total.toStringAsFixed(2)}'),
+                            Text('Total: ${order.total.toStringAsFixed(2)}'),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: _getOrderStatusColor(order.status),
+                                color: _getOrderStatusColor(order.status as int),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                _getOrderStatusText(order.status),
+                                _getOrderStatusText(order.status as int),
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),

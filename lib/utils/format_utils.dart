@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 
-import 'package:intl/intl.dart';
 
 class FormatUtils {
   // Formatar moeda

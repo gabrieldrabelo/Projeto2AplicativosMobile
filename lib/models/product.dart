@@ -18,7 +18,7 @@ class Product {
     required this.stock,
     this.salePrice,
     this.description,
-    this.lastModified,
+    this.lastModified, required double stockQuantity, required int status, double? cost, String? barcode,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -29,9 +29,9 @@ class Product {
       unit: json['unit'] ?? json['unidade'] ?? '',
       price: (json['price'] ?? json['preco'] ?? 0.0).toDouble(),
       stock: (json['stock'] ?? json['estoque'] ?? 0.0).toDouble(),
-      salePrice: json['salePrice'] != null ? json['salePrice'].toDouble() : null,
+      salePrice: json['salePrice']?.toDouble(),
       description: json['description'] ?? json['descricao'],
-      lastModified: json['lastModified'] ?? json['ultimaAlteracao'],
+      lastModified: json['lastModified'] ?? json['ultimaAlteracao'], stockQuantity: 0, status: 0,
     );
   }
 
@@ -73,9 +73,17 @@ class Product {
       stock: map['stock'],
       salePrice: map['salePrice'],
       description: map['description'],
-      lastModified: map['lastModified'],
+      lastModified: map['lastModified'], stockQuantity: 0, status: 0,
     );
   }
+
+  get stockQuantity => null;
+
+  get status => null;
+
+  get cost => null;
+
+  get barcode => null;
 
   Product copyWith({
     int? id,
@@ -97,7 +105,7 @@ class Product {
       stock: stock ?? this.stock,
       salePrice: salePrice ?? this.salePrice,
       description: description ?? this.description,
-      lastModified: lastModified ?? this.lastModified,
+      lastModified: lastModified ?? this.lastModified, stockQuantity: 0, status: 0,
     );
   }
 }

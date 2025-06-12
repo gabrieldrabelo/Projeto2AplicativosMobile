@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../database/database_helper.dart';
 import '../models/client.dart';
-import '../utils/logger.dart';
 
 class ClientController {
   final dbHelper = DatabaseHelper.instance;

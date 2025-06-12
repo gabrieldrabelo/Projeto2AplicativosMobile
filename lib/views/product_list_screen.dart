@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import '../controllers/product_controller.dart';
 import '../models/product.dart';
@@ -6,6 +8,7 @@ class ProductListScreen extends StatefulWidget {
   const ProductListScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProductListScreenState createState() => _ProductListScreenState();
 }
 
@@ -33,14 +36,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
   }
 
   void _showProductForm({Product? product}) {
-    final _formKey = GlobalKey<FormState>();
-    final _nameController = TextEditingController(text: product?.name ?? '');
-    final _unitController = TextEditingController(text: product?.unit ?? 'un');
-    final _stockQuantityController = TextEditingController(text: product?.stockQuantity.toString() ?? '0');
-    final _salePriceController = TextEditingController(text: product?.salePrice.toString() ?? '0');
-    final _statusController = TextEditingController(text: product?.status.toString() ?? '0');
-    final _costController = TextEditingController(text: product?.cost?.toString() ?? '');
-    final _barcodeController = TextEditingController(text: product?.barcode ?? '');
+    final formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController(text: product?.name ?? '');
+    final unitController = TextEditingController(text: product?.unit ?? 'un');
+    final stockQuantityController = TextEditingController(text: product?.stockQuantity.toString() ?? '0');
+    final salePriceController = TextEditingController(text: product?.salePrice.toString() ?? '0');
+    final statusController = TextEditingController(text: product?.status.toString() ?? '0');
+    final costController = TextEditingController(text: product?.cost?.toString() ?? '');
+    final barcodeController = TextEditingController(text: product?.barcode ?? '');
 
     showDialog(
       context: context,
@@ -48,12 +51,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
         title: Text(product == null ? 'Add Product' : 'Edit Product'),
         content: SingleChildScrollView(
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
-                  controller: _nameController,
+                  controller: nameController,
                   decoration: const InputDecoration(labelText: 'Name *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -63,7 +66,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   },
                 ),
                 DropdownButtonFormField<String>(
-                  value: _unitController.text,
+                  value: unitController.text,
                   decoration: const InputDecoration(labelText: 'Unit *'),
                   items: const [
                     DropdownMenuItem(value: 'un', child: Text('Unit (un)')),
@@ -73,7 +76,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     DropdownMenuItem(value: 'ml', child: Text('Milliliter (ml)')),
                   ],
                   onChanged: (value) {
-                    _unitController.text = value!;
+                    unitController.text = value!;
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -83,7 +86,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   },
                 ),
                 TextFormField(
-                  controller: _stockQuantityController,
+                  controller: stockQuantityController,
                   decoration: const InputDecoration(labelText: 'Stock Quantity *'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
@@ -97,7 +100,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   },
                 ),
                 TextFormField(
-                  controller: _salePriceController,
+                  controller: salePriceController,
                   decoration: const InputDecoration(labelText: 'Sale Price *'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
@@ -111,14 +114,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   },
                 ),
                 DropdownButtonFormField<String>(
-                  value: _statusController.text,
+                  value: statusController.text,
                   decoration: const InputDecoration(labelText: 'Status *'),
                   items: const [
                     DropdownMenuItem(value: '0', child: Text('Active')),
                     DropdownMenuItem(value: '1', child: Text('Inactive')),
                   ],
                   onChanged: (value) {
-                    _statusController.text = value!;
+                    statusController.text = value!;
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -128,12 +131,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   },
                 ),
                 TextFormField(
-                  controller: _costController,
+                  controller: costController,
                   decoration: const InputDecoration(labelText: 'Cost'),
                   keyboardType: TextInputType.number,
                 ),
                 TextFormField(
-                  controller: _barcodeController,
+                  controller: barcodeController,
                   decoration: const InputDecoration(labelText: 'Barcode'),
                 ),
               ],
@@ -147,31 +150,31 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ),
           TextButton(
             onPressed: () async {
-              if (_formKey.currentState!.validate()) {
+              if (formKey.currentState!.validate()) {
                 if (product == null) {
                   // Add new product
                   final newProduct = Product(
-                    name: _nameController.text,
-                    unit: _unitController.text,
-                    stockQuantity: double.parse(_stockQuantityController.text),
-                    salePrice: double.parse(_salePriceController.text),
-                    status: int.parse(_statusController.text),
-                    cost: _costController.text.isNotEmpty ? double.parse(_costController.text) : null,
-                    barcode: _barcodeController.text.isNotEmpty ? _barcodeController.text : null,
+                    name: nameController.text,
+                    unit: unitController.text,
+                    stockQuantity: double.parse(stockQuantityController.text),
+                    salePrice: double.parse(salePriceController.text),
+                    status: int.parse(statusController.text),
+                    cost: costController.text.isNotEmpty ? double.parse(costController.text) : null,
+                    barcode: barcodeController.text.isNotEmpty ? barcodeController.text : null, code: '', price: 0, stock: 0,
                   );
                   await _productController.addProduct(newProduct);
                 } else {
                   // Update existing product
                   final updatedProduct = Product(
                     id: product.id,
-                    name: _nameController.text,
-                    unit: _unitController.text,
-                    stockQuantity: double.parse(_stockQuantityController.text),
-                    salePrice: double.parse(_salePriceController.text),
-                    status: int.parse(_statusController.text),
-                    cost: _costController.text.isNotEmpty ? double.parse(_costController.text) : null,
-                    barcode: _barcodeController.text.isNotEmpty ? _barcodeController.text : null,
-                    lastModified: product.lastModified,
+                    name: nameController.text,
+                    unit: unitController.text,
+                    stockQuantity: double.parse(stockQuantityController.text),
+                    salePrice: double.parse(salePriceController.text),
+                    status: int.parse(statusController.text),
+                    cost: costController.text.isNotEmpty ? double.parse(costController.text) : null,
+                    barcode: barcodeController.text.isNotEmpty ? barcodeController.text : null,
+                    lastModified: product.lastModified, code: '', price: 0, stock: 0,
                   );
                   await _productController.updateProduct(updatedProduct);
                 }
@@ -250,5 +253,4 @@ class _ProductListScreenState extends State<ProductListScreen> {
       ),
     );
   }
-}
 }

@@ -1,4 +1,4 @@
-class Client {
+
 class Client {
   int? id;
   String name;
