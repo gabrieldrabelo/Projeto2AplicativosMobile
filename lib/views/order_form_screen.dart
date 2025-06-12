@@ -7,6 +7,9 @@ import '../models/order_item.dart';
 import '../models/order_payment.dart';
 import '../models/client.dart';
 import '../models/product.dart';
+import '../models/order_status.dart';
+import '../models/payment_type.dart';
+import '../utils/format_utils.dart';
 
 class OrderFormScreen extends StatefulWidget {
   final Order? order;
@@ -32,7 +35,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
   List<OrderItem> _orderItems = [];
   List<OrderPayment> _orderPayments = [];
   double _total = 0.0;
-  int _status = 0;
+  String _status = 'draft';
   String _notes = '';
 
   @override
@@ -68,7 +71,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
         );
         _orderItems = orderItems;
         _orderPayments = orderPayments;
-        _total = order.total;
+        _total = order.totalOrder;
         _status = order.status;
         _notes = order.notes ?? '';
       });
@@ -154,13 +157,15 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                 if (selectedProduct != null && quantity > 0 && price > 0) {
                   final newItem = OrderItem(
                     productId: selectedProduct!.id!,
-                    productName: selectedProduct!.name,
+                    orderId: widget.order?.id ?? 0,
                     quantity: quantity,
+                    totalItem: quantity * price,
+                    productName: selectedProduct!.name,
                     price: price,
                     unit: selectedProduct!.unit,
                   );
 
-                  setState(() {
+                  this.setState(() {
                     _orderItems.add(newItem);
                     _updateTotal();
                   });
@@ -177,7 +182,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
   }
 
   void _showAddPaymentDialog() {
-    int paymentType = 0;
+    String paymentType = 'cash';
     double amount = _total;
     String description = '';
 
@@ -190,15 +195,15 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                DropdownButtonFormField<int>(
+                DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Payment Type'),
                   value: paymentType,
                   items: const [
-                    DropdownMenuItem(value: 0, child: Text('Cash')),
-                    DropdownMenuItem(value: 1, child: Text('Credit Card')),
-                    DropdownMenuItem(value: 2, child: Text('Debit Card')),
-                    DropdownMenuItem(value: 3, child: Text('Bank Transfer')),
-                    DropdownMenuItem(value: 4, child: Text('Check')),
+                    DropdownMenuItem(value: 'cash', child: Text('Cash')),
+                    DropdownMenuItem(value: 'credit_card', child: Text('Credit Card')),
+                    DropdownMenuItem(value: 'debit_card', child: Text('Debit Card')),
+                    DropdownMenuItem(value: 'bank_transfer', child: Text('Bank Transfer')),
+                    DropdownMenuItem(value: 'check', child: Text('Check')),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -236,12 +241,13 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
               onPressed: () {
                 if (amount > 0) {
                   final newPayment = OrderPayment(
+                    orderId: widget.order?.id ?? 0,
+                    value: amount,
                     paymentType: paymentType,
-                    amount: amount,
-                    description: description,
+                    description: description.isNotEmpty ? description : null,
                   );
 
-                  setState(() {
+                  this.setState(() {
                     _orderPayments.add(newPayment);
                   });
 
@@ -263,18 +269,25 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
       });
 
       try {
+        // Calculate total from items
+        double total = 0.0;
+        for (var item in _orderItems) {
+          total += item.quantity * item.price;
+        }
+
         if (widget.order == null) {
           // Create new order
           final newOrder = Order(
             clientId: _selectedClient!.id!,
+            userId: 1, // Assuming a default user ID
+            totalOrder: total,
+            creationDate: DateTime.now().toIso8601String(),
             clientName: _selectedClient!.name,
-            orderDate: DateTime.now().toIso8601String(),
-            total: _total,
             status: _status,
             notes: _notes.isNotEmpty ? _notes : null,
           );
 
-          final orderId = await _orderController.addOrder(newOrder, _orderItems, _orderPayments);
+          final orderId = await _orderController.addOrder(newOrder);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Order #$orderId created successfully')),
           );
@@ -283,15 +296,18 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
           final updatedOrder = Order(
             id: widget.order!.id,
             clientId: _selectedClient!.id!,
+            userId: widget.order!.userId,
+            totalOrder: total,
+            creationDate: widget.order!.creationDate,
+            lastModified: DateTime.now().toIso8601String(),
             clientName: _selectedClient!.name,
-            orderDate: widget.order!.orderDate,
-            total: _total,
             status: _status,
             notes: _notes.isNotEmpty ? _notes : null,
-            lastModified: widget.order!.lastModified,
+            items: _orderItems,
+            payments: _orderPayments,
           );
 
-          await _orderController.updateOrder(updatedOrder, _orderItems, _orderPayments);
+          await _orderController.updateOrder(updatedOrder);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Order #${widget.order!.id} updated successfully')),
           );
@@ -314,17 +330,17 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
     }
   }
 
-  String _getPaymentTypeText(int paymentType) {
+  String _getPaymentTypeText(String paymentType) {
     switch (paymentType) {
-      case 0:
+      case 'cash':
         return 'Cash';
-      case 1:
+      case 'credit_card':
         return 'Credit Card';
-      case 2:
+      case 'debit_card':
         return 'Debit Card';
-      case 3:
+      case 'bank_transfer':
         return 'Bank Transfer';
-      case 4:
+      case 'check':
         return 'Check';
       default:
         return 'Unknown';
@@ -374,17 +390,18 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                     const SizedBox(height: 16),
 
                     // Order status
-                    DropdownButtonFormField<int>(
+                    DropdownButtonFormField<String>(
                       decoration: const InputDecoration(
                         labelText: 'Status',
                         border: OutlineInputBorder(),
                       ),
                       value: _status,
                       items: const [
-                        DropdownMenuItem(value: 0, child: Text('Draft')),
-                        DropdownMenuItem(value: 1, child: Text('Confirmed')),
-                        DropdownMenuItem(value: 2, child: Text('Delivered')),
-                        DropdownMenuItem(value: 3, child: Text('Canceled')),
+                        DropdownMenuItem(value: 'draft', child: Text('Draft')),
+                        DropdownMenuItem(value: 'confirmed', child: Text('Confirmed')),
+                        DropdownMenuItem(value: 'in_progress', child: Text('In Progress')),
+                        DropdownMenuItem(value: 'delivered', child: Text('Delivered')),
+                        DropdownMenuItem(value: 'canceled', child: Text('Canceled')),
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -522,8 +539,8 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                               return Card(
                                 child: ListTile(
                                   title: Text(_getPaymentTypeText(payment.paymentType)),
-                                  subtitle: payment.description.isNotEmpty
-                                      ? Text(payment.description)
+                                  subtitle: payment.description != null && payment.description!.isNotEmpty
+                                      ? Text(payment.description!)
                                       : null,
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,

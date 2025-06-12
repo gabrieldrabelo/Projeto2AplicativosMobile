@@ -33,21 +33,21 @@ class _UserListScreenState extends State<UserListScreen> {
   }
 
   void _showUserForm({User? user}) {
-    final _formKey = GlobalKey<FormState>();
-    final _nameController = TextEditingController(text: user?.name ?? '');
-    final _passwordController = TextEditingController(text: user?.password ?? '');
+    final formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController(text: user?.name ?? '');
+    final passwordController = TextEditingController(text: user?.password ?? '');
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(user == null ? 'Add User' : 'Edit User'),
         content: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: _nameController,
+                controller: nameController,
                 decoration: const InputDecoration(labelText: 'Name *'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -57,7 +57,7 @@ class _UserListScreenState extends State<UserListScreen> {
                 },
               ),
               TextFormField(
-                controller: _passwordController,
+                controller: passwordController,
                 decoration: const InputDecoration(labelText: 'Password *'),
                 obscureText: true,
                 validator: (value) {
@@ -77,20 +77,20 @@ class _UserListScreenState extends State<UserListScreen> {
           ),
           TextButton(
             onPressed: () async {
-              if (_formKey.currentState!.validate()) {
+              if (formKey.currentState!.validate()) {
                 if (user == null) {
                   // Add new user
                   final newUser = User(
-                    name: _nameController.text,
-                    password: _passwordController.text,
+                    name: nameController.text,
+                    password: passwordController.text,
                   );
                   await _userController.addUser(newUser);
                 } else {
                   // Update existing user
                   final updatedUser = User(
                     id: user.id,
-                    name: _nameController.text,
-                    password: _passwordController.text,
+                    name: nameController.text,
+                    password: passwordController.text,
                     lastModified: user.lastModified,
                   );
                   await _userController.updateUser(updatedUser);

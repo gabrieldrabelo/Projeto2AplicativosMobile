@@ -1,14 +1,26 @@
 class ValidationUtils {
-  // Valida se um CPF u00e9 vu00e1lido
+  // Validau00e7u00e3o de e-mail
+  static bool isValidEmail(String email) {
+    final emailRegExp = RegExp(
+      r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+    );
+    return emailRegExp.hasMatch(email);
+  }
+  
+  // Validau00e7u00e3o de CPF
   static bool isValidCPF(String cpf) {
-    // Remove caracteres nu00e3o numeu00e9ricos
-    cpf = cpf.replaceAll(RegExp(r'\D'), '');
+    // Remove caracteres nu00e3o numu00e9ricos
+    cpf = cpf.replaceAll(RegExp(r'[^0-9]'), '');
     
     // Verifica se tem 11 du00edgitos
-    if (cpf.length != 11) return false;
+    if (cpf.length != 11) {
+      return false;
+    }
     
     // Verifica se todos os du00edgitos su00e3o iguais
-    if (RegExp(r'^(\d)\1*$').hasMatch(cpf)) return false;
+    if (RegExp(r'^(\d)\1*$').hasMatch(cpf)) {
+      return false;
+    }
     
     // Calcula o primeiro du00edgito verificador
     int soma = 0;
@@ -18,9 +30,6 @@ class ValidationUtils {
     int digito1 = 11 - (soma % 11);
     if (digito1 > 9) digito1 = 0;
     
-    // Verifica o primeiro du00edgito verificador
-    if (int.parse(cpf[9]) != digito1) return false;
-    
     // Calcula o segundo du00edgito verificador
     soma = 0;
     for (int i = 0; i < 10; i++) {
@@ -29,20 +38,24 @@ class ValidationUtils {
     int digito2 = 11 - (soma % 11);
     if (digito2 > 9) digito2 = 0;
     
-    // Verifica o segundo du00edgito verificador
-    return int.parse(cpf[10]) == digito2;
+    // Verifica se os du00edgitos calculados su00e3o iguais aos du00edgitos informados
+    return (digito1 == int.parse(cpf[9]) && digito2 == int.parse(cpf[10]));
   }
   
-  // Valida se um CNPJ u00e9 vu00e1lido
+  // Validau00e7u00e3o de CNPJ
   static bool isValidCNPJ(String cnpj) {
-    // Remove caracteres nu00e3o numeu00e9ricos
-    cnpj = cnpj.replaceAll(RegExp(r'\D'), '');
+    // Remove caracteres nu00e3o numu00e9ricos
+    cnpj = cnpj.replaceAll(RegExp(r'[^0-9]'), '');
     
     // Verifica se tem 14 du00edgitos
-    if (cnpj.length != 14) return false;
+    if (cnpj.length != 14) {
+      return false;
+    }
     
     // Verifica se todos os du00edgitos su00e3o iguais
-    if (RegExp(r'^(\d)\1*$').hasMatch(cnpj)) return false;
+    if (RegExp(r'^(\d)\1*$').hasMatch(cnpj)) {
+      return false;
+    }
     
     // Calcula o primeiro du00edgito verificador
     int soma = 0;
@@ -54,9 +67,6 @@ class ValidationUtils {
     int digito1 = 11 - (soma % 11);
     if (digito1 > 9) digito1 = 0;
     
-    // Verifica o primeiro du00edgito verificador
-    if (int.parse(cnpj[12]) != digito1) return false;
-    
     // Calcula o segundo du00edgito verificador
     soma = 0;
     peso = 6;
@@ -67,37 +77,42 @@ class ValidationUtils {
     int digito2 = 11 - (soma % 11);
     if (digito2 > 9) digito2 = 0;
     
-    // Verifica o segundo du00edgito verificador
-    return int.parse(cnpj[13]) == digito2;
+    // Verifica se os du00edgitos calculados su00e3o iguais aos du00edgitos informados
+    return (digito1 == int.parse(cnpj[12]) && digito2 == int.parse(cnpj[13]));
   }
   
-  // Valida se um email u00e9 vu00e1lido
-  static bool isValidEmail(String email) {
-    if (email.isEmpty) return false;
-    
-    final emailRegex = RegExp(
-      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-      caseSensitive: false,
-    );
-    
-    return emailRegex.hasMatch(email);
-  }
-  
-  // Valida se um telefone u00e9 vu00e1lido
+  // Validau00e7u00e3o de telefone
   static bool isValidPhone(String phone) {
-    // Remove caracteres nu00e3o numeu00e9ricos
-    phone = phone.replaceAll(RegExp(r'\D'), '');
+    // Remove caracteres nu00e3o numu00e9ricos
+    phone = phone.replaceAll(RegExp(r'[^0-9]'), '');
     
-    // Verifica se tem entre 10 e 11 du00edgitos (com ou sem DDD)
+    // Verifica se tem 10 ou 11 du00edgitos (com ou sem o 9)
     return phone.length >= 10 && phone.length <= 11;
   }
   
-  // Valida se um CEP u00e9 vu00e1lido
-  static bool isValidZipCode(String zipCode) {
-    // Remove caracteres nu00e3o numeu00e9ricos
-    zipCode = zipCode.replaceAll(RegExp(r'\D'), '');
+  // Validau00e7u00e3o de CEP
+  static bool isValidCEP(String cep) {
+    // Remove caracteres nu00e3o numu00e9ricos
+    cep = cep.replaceAll(RegExp(r'[^0-9]'), '');
     
     // Verifica se tem 8 du00edgitos
-    return zipCode.length == 8;
+    return cep.length == 8;
+  }
+  
+  // Validau00e7u00e3o de URL
+  static bool isValidURL(String url) {
+    final urlRegExp = RegExp(
+      r'^(http|https)://[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+([-a-zA-Z0-9._~:/?#[\]@!$&'()*+,;=]*)?$',
+    );
+    return urlRegExp.hasMatch(url);
+  }
+  
+  // Validau00e7u00e3o de senha forte
+  static bool isStrongPassword(String password) {
+    // Pelo menos 8 caracteres, uma letra maiu00fascula, uma minu00fascula, um nu00famero e um caractere especial
+    final passwordRegExp = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$',
+    );
+    return passwordRegExp.hasMatch(password);
   }
 }
