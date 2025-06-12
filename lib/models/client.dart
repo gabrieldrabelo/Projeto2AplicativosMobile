@@ -1,4 +1,5 @@
 class Client {
+class Client {
   int? id;
   String name;
   String type; // F - Physical / J - Legal

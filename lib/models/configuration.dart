@@ -1,4 +1,5 @@
 class Configuration {
+class Configuration {
   int? id;
   String serverUrl;
   String? lastSync;

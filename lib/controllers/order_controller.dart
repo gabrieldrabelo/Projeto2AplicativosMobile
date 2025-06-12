@@ -7,6 +7,7 @@ import '../models/product.dart';
 import 'product_controller.dart';
 import '../models/client.dart';
 import 'client_controller.dart';
+import '../utils/logger.dart';
 
 class OrderController {
   final dbHelper = DatabaseHelper.instance;

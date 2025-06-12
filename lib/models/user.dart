@@ -1,4 +1,5 @@
 class User {
+class User {
   int? id;
   String name;
   String password;

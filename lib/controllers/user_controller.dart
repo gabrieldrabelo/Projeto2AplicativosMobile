@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import '../database/database_helper.dart';
 import '../models/user.dart';
+import '../utils/logger.dart';
 
 class UserController {
   final dbHelper = DatabaseHelper.instance;
