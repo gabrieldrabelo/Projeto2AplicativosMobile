@@ -3,9 +3,15 @@ import '../database/database_helper.dart';
 import '../models/order.dart';
 import '../models/order_item.dart';
 import '../models/order_payment.dart';
+import '../models/product.dart';
+import 'product_controller.dart';
+import '../models/client.dart';
+import 'client_controller.dart';
 
 class OrderController {
   final dbHelper = DatabaseHelper.instance;
+  final ProductController _productController = ProductController();
+  final ClientController _clientController = ClientController();
 
   Future<List<Order>> getOrders() async {
     final db = await dbHelper.database;
@@ -38,6 +44,12 @@ class OrderController {
       final order = Order.fromMap(orderMap);
       order.items = items;
       order.payments = payments;
+      
+      // Get client name
+      final client = await _clientController.getClientById(order.clientId);
+      if (client != null) {
+        order.clientName = client.name;
+      }
       
       orders.add(order);
     }
@@ -78,7 +90,48 @@ class OrderController {
     order.items = items;
     order.payments = payments;
     
+    // Get client name
+    final client = await _clientController.getClientById(order.clientId);
+    if (client != null) {
+      order.clientName = client.name;
+    }
+    
     return order;
+  }
+
+  Future<List<OrderItem>> getOrderItems(int orderId) async {
+    final db = await dbHelper.database;
+    
+    final itemMaps = await db.query(
+      'order_items',
+      where: 'orderId = ?',
+      whereArgs: [orderId],
+    );
+    
+    final items = itemMaps.map((map) => OrderItem.fromMap(map)).toList();
+    
+    // Get product names
+    for (var item in items) {
+      final product = await _productController.getProductById(item.productId);
+      if (product != null) {
+        item.productName = product.name;
+        item.unit = product.unit;
+      }
+    }
+    
+    return items;
+  }
+
+  Future<List<OrderPayment>> getOrderPayments(int orderId) async {
+    final db = await dbHelper.database;
+    
+    final paymentMaps = await db.query(
+      'order_payments',
+      where: 'orderId = ?',
+      whereArgs: [orderId],
+    );
+    
+    return paymentMaps.map((map) => OrderPayment.fromMap(map)).toList();
   }
 
   Future<int> addOrder(Order order) async {

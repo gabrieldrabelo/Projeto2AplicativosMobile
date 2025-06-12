@@ -4,6 +4,9 @@ class OrderItem {
   int productId;
   double quantity;
   double totalItem;
+  String? productName; // Nome do produto para exibiu00e7u00e3o
+  double price; // Preu00e7o unitu00e1rio
+  String unit; // Unidade de medida
 
   OrderItem({
     this.id,
@@ -11,6 +14,9 @@ class OrderItem {
     required this.productId,
     required this.quantity,
     required this.totalItem,
+    this.productName,
+    required this.price,
+    required this.unit,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
@@ -20,6 +26,9 @@ class OrderItem {
       productId: json['idProduto'],
       quantity: json['quantidade']?.toDouble() ?? 0.0,
       totalItem: json['totalItem']?.toDouble() ?? 0.0,
+      productName: json['productName'],
+      price: json['price']?.toDouble() ?? 0.0,
+      unit: json['unit'] ?? 'un',
     );
   }
 
@@ -30,6 +39,9 @@ class OrderItem {
       'idProduto': productId,
       'quantidade': quantity,
       'totalItem': totalItem,
+      'productName': productName,
+      'price': price,
+      'unit': unit,
     };
   }
 
@@ -40,6 +52,9 @@ class OrderItem {
       'productId': productId,
       'quantity': quantity,
       'totalItem': totalItem,
+      'productName': productName,
+      'price': price,
+      'unit': unit,
     };
   }
 
@@ -50,6 +65,9 @@ class OrderItem {
       productId: map['productId'],
       quantity: map['quantity'],
       totalItem: map['totalItem'],
+      productName: map['productName'],
+      price: map['price'] ?? 0.0,
+      unit: map['unit'] ?? 'un',
     );
   }
 }

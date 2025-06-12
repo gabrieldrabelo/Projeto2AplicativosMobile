@@ -10,6 +10,9 @@ class Order {
   String? lastModified;
   List<OrderItem> items;
   List<OrderPayment> payments;
+  String? clientName; // Nome do cliente para exibição
+  String? notes; // Observações do pedido
+  String status; // Status do pedido: 'draft', 'confirmed', 'delivered', 'canceled'
 
   Order({
     this.id,
@@ -20,7 +23,22 @@ class Order {
     this.lastModified,
     this.items = const [],
     this.payments = const [],
+    this.clientName,
+    this.notes,
+    this.status = 'draft',
   });
+
+  // Getter para o total do pedido (calculado a partir dos itens)
+  double get total {
+    double total = 0;
+    for (var item in items) {
+      total += item.totalItem;
+    }
+    return total;
+  }
+
+  // Getter para a data do pedido formatada
+  String get orderDate => creationDate;
 
   factory Order.fromJson(Map<String, dynamic> json) {
     List<OrderItem> items = [];
@@ -44,6 +62,9 @@ class Order {
       lastModified: json['ultimaAlteracao'] ?? json['lastModified'],
       items: items,
       payments: payments,
+      clientName: json['clientName'],
+      notes: json['notes'],
+      status: json['status'] ?? 'draft',
     );
   }
 
@@ -57,6 +78,9 @@ class Order {
       'ultimaAlteracao': lastModified,
       'itens': items.map((item) => item.toJson()).toList(),
       'pagamentos': payments.map((payment) => payment.toJson()).toList(),
+      'clientName': clientName,
+      'notes': notes,
+      'status': status,
     };
   }
 
@@ -68,6 +92,8 @@ class Order {
       'totalOrder': totalOrder,
       'creationDate': creationDate,
       'lastModified': lastModified,
+      'notes': notes,
+      'status': status,
     };
   }
 
@@ -79,6 +105,8 @@ class Order {
       totalOrder: map['totalOrder'],
       creationDate: map['creationDate'],
       lastModified: map['lastModified'],
+      notes: map['notes'],
+      status: map['status'] ?? 'draft',
     );
   }
 }

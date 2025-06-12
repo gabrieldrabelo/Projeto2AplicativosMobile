@@ -20,7 +20,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // Incrementado para versão 2 devido às alterações no schema
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -79,6 +79,8 @@ class DatabaseHelper {
         totalOrder REAL NOT NULL,
         creationDate TEXT NOT NULL,
         lastModified TEXT,
+        notes TEXT,
+        status TEXT NOT NULL DEFAULT 'draft',
         FOREIGN KEY (clientId) REFERENCES clients (id),
         FOREIGN KEY (userId) REFERENCES users (id)
       )
@@ -92,6 +94,9 @@ class DatabaseHelper {
         productId INTEGER NOT NULL,
         quantity REAL NOT NULL,
         totalItem REAL NOT NULL,
+        productName TEXT,
+        price REAL NOT NULL DEFAULT 0.0,
+        unit TEXT NOT NULL DEFAULT 'un',
         FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE,
         FOREIGN KEY (productId) REFERENCES products (id)
       )
@@ -103,6 +108,8 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         orderId INTEGER NOT NULL,
         value REAL NOT NULL,
+        paymentType TEXT NOT NULL DEFAULT 'Dinheiro',
+        description TEXT,
         FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE
       )
     ''');
@@ -130,7 +137,21 @@ class DatabaseHelper {
 
   Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < newVersion) {
-      // Add upgrade logic here if needed in the future
+      // Add upgrade logic for database schema changes
+      if (oldVersion == 1 && newVersion >= 2) {
+        // Add new columns to orders table
+        await db.execute('ALTER TABLE orders ADD COLUMN notes TEXT');
+        await db.execute('ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT \'draft\'');
+        
+        // Add new columns to order_items table
+        await db.execute('ALTER TABLE order_items ADD COLUMN productName TEXT');
+        await db.execute('ALTER TABLE order_items ADD COLUMN price REAL NOT NULL DEFAULT 0.0');
+        await db.execute('ALTER TABLE order_items ADD COLUMN unit TEXT NOT NULL DEFAULT \'un\'');
+        
+        // Add new columns to order_payments table
+        await db.execute('ALTER TABLE order_payments ADD COLUMN paymentType TEXT NOT NULL DEFAULT \'Dinheiro\'');
+        await db.execute('ALTER TABLE order_payments ADD COLUMN description TEXT');
+      }
     }
   }
 

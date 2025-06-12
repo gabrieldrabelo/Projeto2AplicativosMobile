@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'views/login_screen.dart';
 import 'database/database_helper.dart';
+import 'database/migration_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize the database
   await DatabaseHelper.instance.database;
+  
+  // Execute data migration after database upgrade
+  await MigrationHelper().updateDataAfterMigration();
+  
   runApp(const MyApp());
 }
 
