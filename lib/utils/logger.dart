@@ -13,6 +13,16 @@ class Logger {
     }
   }
 
+  static void e(String message, [dynamic error, StackTrace? stackTrace]) {
+    print('[ERROR] $message');
+    if (error != null) {
+      print('[ERROR] Error: $error');
+    }
+    if (stackTrace != null) {
+      print('[ERROR] StackTrace: $stackTrace');
+    }
+  }
+
   static void warning(String message) {
     print('[WARNING] $message');
   }

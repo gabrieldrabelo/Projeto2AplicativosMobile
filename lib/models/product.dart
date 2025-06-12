@@ -4,7 +4,8 @@ class Product {
   String name;
   String unit;
   double price;
-  double stock;  double? salePrice;  double? salePrice;
+  double stock;
+  double? salePrice;
   String? description;
   String? lastModified;
 
@@ -13,7 +14,9 @@ class Product {
     required this.code,
     required this.name,
     required this.unit,
-    required this.price,    this.salePrice,    required this.stock,
+    required this.price,
+    required this.stock,
+    this.salePrice,
     this.description,
     this.lastModified,
   });
@@ -26,9 +29,11 @@ class Product {
       unit: json['unit'] ?? json['unidade'] ?? '',
       price: (json['price'] ?? json['preco'] ?? 0.0).toDouble(),
       stock: (json['stock'] ?? json['estoque'] ?? 0.0).toDouble(),
+      salePrice: json['salePrice'] != null ? json['salePrice'].toDouble() : null,
       description: json['description'] ?? json['descricao'],
       lastModified: json['lastModified'] ?? json['ultimaAlteracao'],
-    );      salePrice: json['salePrice'] != null ? json['salePrice'].toDouble() : null,  }
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -38,11 +43,13 @@ class Product {
       'unidade': unit,
       'preco': price,
       'estoque': stock,
+      'salePrice': salePrice,
       'descricao': description,
       'ultimaAlteracao': lastModified,
     };
   }
-      'salePrice': salePrice,  Map<String, dynamic> toMap() {
+
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'code': code,
@@ -50,13 +57,15 @@ class Product {
       'unit': unit,
       'price': price,
       'stock': stock,
+      'salePrice': salePrice,
       'description': description,
       'lastModified': lastModified,
     };
   }
 
   factory Product.fromMap(Map<String, dynamic> map) {
-    return Product(      'salePrice': salePrice,      id: map['id'],
+    return Product(
+      id: map['id'],
       code: map['code'],
       name: map['name'],
       unit: map['unit'],

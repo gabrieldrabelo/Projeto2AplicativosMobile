@@ -121,7 +121,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                     setState(() {
                       selectedProduct = value;
                       if (value != null) {
-                        price = value.salePrice;
+                        price = value.salePrice ?? value.price;
                       }
                     });
                   },
@@ -460,7 +460,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                               final item = _orderItems[index];
                               return Card(
                                 child: ListTile(
-                                  title: Text(item.productName ?? 'Produto'),? 'Produto'),
+                                  title: Text(item.productName ?? 'Produto'),
                                   subtitle: Text(
                                       '${item.quantity} ${item.unit} x \${item.price.toStringAsFixed(2)}'),
                                   trailing: Row(
