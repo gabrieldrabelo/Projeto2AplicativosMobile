@@ -67,7 +67,12 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
       setState(() {
         _selectedClient = _clients.firstWhere(
           (client) => client.id == order.clientId,
-          orElse: () => _clients.isNotEmpty ? _clients.first : null,
+          orElse: () => _clients.isNotEmpty ? _clients.first : Client(
+            id: 0,
+            name: 'Selecione um cliente',
+            type: 'F',
+            cpfCnpj: '',
+          ),
         );
         _orderItems = orderItems;
         _orderPayments = orderPayments;

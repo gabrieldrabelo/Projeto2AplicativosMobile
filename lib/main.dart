@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
-import 'views/login_screen.dart';
-import 'database/database_helper.dart';
-import 'database/migration_helper.dart';
+import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  // Initialize the database
-  await DatabaseHelper.instance.database;
-  
-  // Execute data migration after database upgrade
-  await MigrationHelper().updateDataAfterMigration();
-  
+void main() {
   runApp(const MyApp());
 }
 
@@ -25,7 +17,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const LoginScreen(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const HomeScreen(),
+      },
     );
   }
 }

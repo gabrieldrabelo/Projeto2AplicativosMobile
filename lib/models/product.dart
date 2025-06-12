@@ -1,50 +1,46 @@
 class Product {
   int? id;
+  String code;
   String name;
-  String unit; // un, cx, kg, lt, ml
-  double stockQuantity;
-  double salePrice;
-  int status; // 0 - Active / 1 - Inactive
-  double? cost;
-  String? barcode;
+  String unit;
+  double price;
+  double stock;
+  String? description;
   String? lastModified;
 
   Product({
     this.id,
+    required this.code,
     required this.name,
     required this.unit,
-    required this.stockQuantity,
-    required this.salePrice,
-    required this.status,
-    this.cost,
-    this.barcode,
+    required this.price,
+    required this.stock,
+    this.description,
     this.lastModified,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'],
-      name: json['nome'] ?? json['name'],
-      unit: json['unidade'] ?? json['unit'],
-      stockQuantity: json['qtdEstoque']?.toDouble() ?? json['stockQuantity']?.toDouble() ?? 0.0,
-      salePrice: json['precoVenda']?.toDouble() ?? json['salePrice']?.toDouble() ?? 0.0,
-      status: json['Status'] ?? json['status'] ?? 0,
-      cost: json['custo']?.toDouble() ?? json['cost']?.toDouble(),
-      barcode: json['codigoBarra'] ?? json['barcode'],
-      lastModified: json['ultimaAlteracao'] ?? json['lastModified'],
+      code: json['code'] ?? json['codigo'] ?? '',
+      name: json['name'] ?? json['nome'] ?? '',
+      unit: json['unit'] ?? json['unidade'] ?? '',
+      price: (json['price'] ?? json['preco'] ?? 0.0).toDouble(),
+      stock: (json['stock'] ?? json['estoque'] ?? 0.0).toDouble(),
+      description: json['description'] ?? json['descricao'],
+      lastModified: json['lastModified'] ?? json['ultimaAlteracao'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'codigo': code,
       'nome': name,
       'unidade': unit,
-      'qtdEstoque': stockQuantity,
-      'precoVenda': salePrice,
-      'Status': status,
-      'custo': cost,
-      'codigoBarra': barcode,
+      'preco': price,
+      'estoque': stock,
+      'descricao': description,
       'ultimaAlteracao': lastModified,
     };
   }
@@ -52,13 +48,12 @@ class Product {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'code': code,
       'name': name,
       'unit': unit,
-      'stockQuantity': stockQuantity,
-      'salePrice': salePrice,
-      'status': status,
-      'cost': cost,
-      'barcode': barcode,
+      'price': price,
+      'stock': stock,
+      'description': description,
       'lastModified': lastModified,
     };
   }
@@ -66,14 +61,35 @@ class Product {
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
       id: map['id'],
+      code: map['code'],
       name: map['name'],
       unit: map['unit'],
-      stockQuantity: map['stockQuantity'],
-      salePrice: map['salePrice'],
-      status: map['status'],
-      cost: map['cost'],
-      barcode: map['barcode'],
+      price: map['price'],
+      stock: map['stock'],
+      description: map['description'],
       lastModified: map['lastModified'],
+    );
+  }
+
+  Product copyWith({
+    int? id,
+    String? code,
+    String? name,
+    String? unit,
+    double? price,
+    double? stock,
+    String? description,
+    String? lastModified,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      unit: unit ?? this.unit,
+      price: price ?? this.price,
+      stock: stock ?? this.stock,
+      description: description ?? this.description,
+      lastModified: lastModified ?? this.lastModified,
     );
   }
 }

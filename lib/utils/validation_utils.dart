@@ -99,10 +99,26 @@ class ValidationUtils {
     return cep.length == 8;
   }
   
-  // Validau00e7u00e3o de URL
+  // Validação de URL
+  static bool isValidURL(String url) {
+    final urlRegExp = RegExp(
+      r'^(http|https)://[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+([\-a-zA-Z0-9._~:/?#\[\]@!  // Validau00e7u00e3o de URL
   static bool isValidURL(String url) {
     final urlRegExp = RegExp(
       r'^(http|https)://[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+([-a-zA-Z0-9._~:/?#[\]@!$&'()*+,;=]*)?$',
+    );
+    return urlRegExp.hasMatch(url);
+  }\(\)*+,;=]*)?
+  
+  // Validau00e7u00e3o de senha forte
+  static bool isStrongPassword(String password) {
+    // Pelo menos 8 caracteres, uma letra maiu00fascula, uma minu00fascula, um nu00famero e um caractere especial
+    final passwordRegExp = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$',
+    );
+    return passwordRegExp.hasMatch(password);
+  }
+},
     );
     return urlRegExp.hasMatch(url);
   }
