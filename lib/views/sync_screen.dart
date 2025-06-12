@@ -6,7 +6,7 @@ class SyncScreen extends StatefulWidget {
   const SyncScreen({Key? key}) : super(key: key);
 
   @override
-  _SyncScreenState createState() => _SyncScreenState();
+  State<SyncScreen> createState() => _SyncScreenState();
 }
 
 class _SyncScreenState extends State<SyncScreen> {
@@ -99,22 +99,28 @@ class _SyncScreenState extends State<SyncScreen> {
         _syncLog.add('Synchronization completed at $now');
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Synchronization completed successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Synchronization completed successfully')),
+        );
+      }
     } catch (e) {
       setState(() {
         _syncStatus = 'Synchronization failed: ${e.toString()}';
         _syncLog.add('Error: ${e.toString()}');
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Synchronization failed: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Synchronization failed: ${e.toString()}')),
+        );
+      }
     } finally {
-      setState(() {
-        _isSyncing = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isSyncing = false;
+        });
+      }
     }
   }
 

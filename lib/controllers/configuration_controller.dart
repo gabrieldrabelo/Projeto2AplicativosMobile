@@ -12,7 +12,7 @@ class ConfigurationController {
     return null;
   }
 
-  Future<int> updateConfiguration(Configuration configuration) async {
+  Future<int> saveConfiguration(Configuration configuration) async {
     final existingConfig = await getConfiguration();
     
     if (existingConfig != null) {
@@ -25,6 +25,27 @@ class ConfigurationController {
       );
     } else {
       return await dbHelper.insert('configuration', configuration.toMap());
+    }
+  }
+  
+  Future<int> updateLastSync(String lastSync) async {
+    final existingConfig = await getConfiguration();
+    
+    if (existingConfig != null) {
+      existingConfig.lastSync = lastSync;
+      return await dbHelper.update(
+        'configuration',
+        existingConfig.toMap(),
+        'id = ?',
+        [existingConfig.id!],
+      );
+    } else {
+      // If no configuration exists, create one with default server URL
+      final config = Configuration(
+        serverUrl: 'https://example.com/api',
+        lastSync: lastSync,
+      );
+      return await dbHelper.insert('configuration', config.toMap());
     }
   }
 }

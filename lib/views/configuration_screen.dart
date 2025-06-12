@@ -6,7 +6,7 @@ class ConfigurationScreen extends StatefulWidget {
   const ConfigurationScreen({Key? key}) : super(key: key);
 
   @override
-  _ConfigurationScreenState createState() => _ConfigurationScreenState();
+  State<ConfigurationScreen> createState() => _ConfigurationScreenState();
 }
 
 class _ConfigurationScreenState extends State<ConfigurationScreen> {
@@ -62,17 +62,23 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
 
         await _configController.saveConfiguration(config);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Configuration saved successfully')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Configuration saved successfully')),
+          );
+        }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving configuration: ${e.toString()}')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error saving configuration: ${e.toString()}')),
+          );
+        }
       } finally {
-        setState(() {
-          _isSaving = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isSaving = false;
+          });
+        }
       }
     }
   }

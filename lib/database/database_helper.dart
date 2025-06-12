@@ -111,7 +111,8 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE configuration (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        serverUrl TEXT
+        serverUrl TEXT,
+        lastSync TEXT
       )
     ''');
 
