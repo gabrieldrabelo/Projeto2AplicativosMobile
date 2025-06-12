@@ -7,9 +7,6 @@ import '../models/order_item.dart';
 import '../models/order_payment.dart';
 import '../models/client.dart';
 import '../models/product.dart';
-import '../models/order_status.dart';
-import '../models/payment_type.dart';
-import '../utils/format_utils.dart';
 
 class OrderFormScreen extends StatefulWidget {
   final Order? order;
@@ -463,14 +460,14 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                               final item = _orderItems[index];
                               return Card(
                                 child: ListTile(
-                                  title: Text(item.productName),
+                                  title: Text(item.productName ?? 'Produto'),? 'Produto'),
                                   subtitle: Text(
-                                      '${item.quantity} ${item.unit} x $${item.price.toStringAsFixed(2)}'),
+                                      '${item.quantity} ${item.unit} x \${item.price.toStringAsFixed(2)}'),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        '$${(item.quantity * item.price).toStringAsFixed(2)}',
+                                        '\${(item.quantity * item.price).toStringAsFixed(2)}',
                                         style: const TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       IconButton(
@@ -503,7 +500,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              '$${_total.toStringAsFixed(2)}',
+                              '\${_total.toStringAsFixed(2)}',
                               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -551,7 +548,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        '$${payment.amount.toStringAsFixed(2)}',
+                                        '\${payment.amount.toStringAsFixed(2)}',
                                         style: const TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       IconButton(

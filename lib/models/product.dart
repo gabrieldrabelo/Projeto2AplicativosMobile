@@ -4,7 +4,7 @@ class Product {
   String name;
   String unit;
   double price;
-  double stock;
+  double stock;  double? salePrice;  double? salePrice;
   String? description;
   String? lastModified;
 
@@ -13,8 +13,7 @@ class Product {
     required this.code,
     required this.name,
     required this.unit,
-    required this.price,
-    required this.stock,
+    required this.price,    this.salePrice,    required this.stock,
     this.description,
     this.lastModified,
   });
@@ -29,8 +28,7 @@ class Product {
       stock: (json['stock'] ?? json['estoque'] ?? 0.0).toDouble(),
       description: json['description'] ?? json['descricao'],
       lastModified: json['lastModified'] ?? json['ultimaAlteracao'],
-    );
-  }
+    );      salePrice: json['salePrice'] != null ? json['salePrice'].toDouble() : null,  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -44,8 +42,7 @@ class Product {
       'ultimaAlteracao': lastModified,
     };
   }
-
-  Map<String, dynamic> toMap() {
+      'salePrice': salePrice,  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'code': code,
@@ -59,13 +56,13 @@ class Product {
   }
 
   factory Product.fromMap(Map<String, dynamic> map) {
-    return Product(
-      id: map['id'],
+    return Product(      'salePrice': salePrice,      id: map['id'],
       code: map['code'],
       name: map['name'],
       unit: map['unit'],
       price: map['price'],
       stock: map['stock'],
+      salePrice: map['salePrice'],
       description: map['description'],
       lastModified: map['lastModified'],
     );
@@ -78,6 +75,7 @@ class Product {
     String? unit,
     double? price,
     double? stock,
+    double? salePrice,
     String? description,
     String? lastModified,
   }) {
@@ -88,6 +86,7 @@ class Product {
       unit: unit ?? this.unit,
       price: price ?? this.price,
       stock: stock ?? this.stock,
+      salePrice: salePrice ?? this.salePrice,
       description: description ?? this.description,
       lastModified: lastModified ?? this.lastModified,
     );

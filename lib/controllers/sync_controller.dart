@@ -233,7 +233,15 @@ class SyncController {
           for (var serverProduct in serverProducts) {
             final localProduct = localProducts.firstWhere(
               (product) => product.id == serverProduct.id,
-              orElse: () => Product(id: -1, name: '', unit: '', stockQuantity: 0, salePrice: 0, status: 0),
+              orElse: () => Product(
+                id: -1, 
+                code: '', 
+                name: '', 
+                unit: '', 
+                price: 0, 
+                stock: 0, 
+                salePrice: 0
+              ),
             );
             
             if (localProduct.id == -1) {

@@ -1,6 +1,4 @@
-import 'package:sqflite/sqflite.dart';
 import '../controllers/product_controller.dart';
-import '../controllers/client_controller.dart';
 import '../models/order.dart';
 import '../models/order_item.dart';
 import '../models/order_payment.dart';
@@ -9,7 +7,6 @@ import 'database_helper.dart';
 class MigrationHelper {
   final dbHelper = DatabaseHelper.instance;
   final ProductController _productController = ProductController();
-  final ClientController _clientController = ClientController();
 
   // Método para atualizar os dados após a migração do banco de dados
   Future<void> updateDataAfterMigration() async {
@@ -36,7 +33,7 @@ class MigrationHelper {
           'order_items',
           {
             'productName': product.name,
-            'price': product.salePrice,
+            'price': product.salePrice ?? product.price,
             'unit': product.unit,
           },
           where: 'id = ?',
