@@ -7,6 +7,9 @@ class OrderPayment {
     this.id,
     required this.orderId,
     required this.value,
+    required String description,
+    required double amount,
+    required int paymentType,
   });
 
   factory OrderPayment.fromJson(Map<String, dynamic> json) {
@@ -14,6 +17,9 @@ class OrderPayment {
       id: json['id'],
       orderId: json['idPedido'],
       value: json['valor']?.toDouble() ?? 0.0,
+      description: '',
+      amount: 0,
+      paymentType: 0,
     );
   }
 
@@ -38,6 +44,15 @@ class OrderPayment {
       id: map['id'],
       orderId: map['orderId'],
       value: map['value'],
+      description: '',
+      amount: 0,
+      paymentType: 0,
     );
   }
+
+  get description => null;
+
+  int? get paymentType => null;
+
+  get amount => null;
 }

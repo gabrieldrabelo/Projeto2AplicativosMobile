@@ -14,7 +14,7 @@ class ConfigurationController {
 
   Future<int> updateConfiguration(Configuration configuration) async {
     final existingConfig = await getConfiguration();
-    
+
     if (existingConfig != null) {
       configuration.id = existingConfig.id;
       return await dbHelper.update(
@@ -27,4 +27,8 @@ class ConfigurationController {
       return await dbHelper.insert('configuration', configuration.toMap());
     }
   }
+
+  saveConfiguration(Configuration config) {}
+
+  updateLastSync(String now) {}
 }

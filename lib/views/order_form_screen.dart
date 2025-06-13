@@ -64,12 +64,13 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
       setState(() {
         _selectedClient = _clients.firstWhere(
           (client) => client.id == order.clientId,
-          orElse: () => _clients.isNotEmpty ? _clients.first : null,
+          orElse: () =>
+              Client(id: -1, name: 'Unknown Client', type: "", cpfCnpj: ''),
         );
         _orderItems = orderItems;
         _orderPayments = orderPayments;
-        _total = order.total;
-        _status = order.status;
+        _total = order.total!;
+        _status = order.status!;
         _notes = order.notes ?? '';
       });
     }
@@ -158,6 +159,8 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                     quantity: quantity,
                     price: price,
                     unit: selectedProduct!.unit,
+                    orderId: 0,
+                    totalItem: 0,
                   );
 
                   setState(() {
@@ -239,6 +242,8 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                     paymentType: paymentType,
                     amount: amount,
                     description: description,
+                    orderId: 0,
+                    value: 0,
                   );
 
                   setState(() {
@@ -257,7 +262,9 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
   }
 
   Future<void> _saveOrder() async {
-    if (_formKey.currentState!.validate() && _selectedClient != null && _orderItems.isNotEmpty) {
+    if (_formKey.currentState!.validate() &&
+        _selectedClient != null &&
+        _orderItems.isNotEmpty) {
       setState(() {
         _isSaving = true;
       });
@@ -272,9 +279,13 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
             total: _total,
             status: _status,
             notes: _notes.isNotEmpty ? _notes : null,
+            userId: 0,
+            totalOrder: 0,
+            creationDate: '',
           );
 
-          final orderId = await _orderController.addOrder(newOrder, _orderItems, _orderPayments);
+          final orderId = await _orderController.addOrder(
+              newOrder, _orderItems, _orderPayments);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Order #$orderId created successfully')),
           );
@@ -289,11 +300,17 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
             status: _status,
             notes: _notes.isNotEmpty ? _notes : null,
             lastModified: widget.order!.lastModified,
+            userId: 0,
+            totalOrder: 0,
+            creationDate: '',
           );
 
-          await _orderController.updateOrder(updatedOrder, _orderItems, _orderPayments);
+          await _orderController.updateOrder(
+              updatedOrder, _orderItems, _orderPayments);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Order #${widget.order!.id} updated successfully')),
+            SnackBar(
+                content:
+                    Text('Order #${widget.order!.id} updated successfully')),
           );
         }
 
@@ -335,7 +352,9 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.order == null ? 'New Order' : 'Edit Order #${widget.order!.id}'),
+        title: Text(widget.order == null
+            ? 'New Order'
+            : 'Edit Order #${widget.order!.id}'),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -416,7 +435,8 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                       children: [
                         const Text(
                           'Order Items',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         ElevatedButton.icon(
                           onPressed: _showAddItemDialog,
@@ -441,15 +461,16 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                               final item = _orderItems[index];
                               return Card(
                                 child: ListTile(
-                                  title: Text(item.productName),
+                                  title: Text(item.productName!),
                                   subtitle: Text(
-                                      '${item.quantity} ${item.unit} x $${item.price.toStringAsFixed(2)}'),
+                                      '${item.quantity} ${item.unit} x ${item.price.toStringAsFixed(2)}'),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        '$${(item.quantity * item.price).toStringAsFixed(2)}',
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                        '${(item.quantity * item.price).toStringAsFixed(2)}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.delete),
@@ -478,11 +499,13 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                           children: [
                             const Text(
                               'Total:',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              '$${_total.toStringAsFixed(2)}',
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              '${_total.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -496,7 +519,8 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                       children: [
                         const Text(
                           'Payments',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         ElevatedButton.icon(
                           onPressed: _showAddPaymentDialog,
@@ -521,7 +545,8 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                               final payment = _orderPayments[index];
                               return Card(
                                 child: ListTile(
-                                  title: Text(_getPaymentTypeText(payment.paymentType)),
+                                  title: Text(_getPaymentTypeText(
+                                      payment.paymentType!)),
                                   subtitle: payment.description.isNotEmpty
                                       ? Text(payment.description)
                                       : null,
@@ -529,8 +554,9 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        '$${payment.amount.toStringAsFixed(2)}',
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                        '${payment.amount.toStringAsFixed(2)}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.delete),

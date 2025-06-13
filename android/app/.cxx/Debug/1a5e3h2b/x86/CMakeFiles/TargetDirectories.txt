@@ -1,0 +1,2 @@
+C:/Users/ggust/Projeto2AplicativosMobile/android/app/.cxx/Debug/1a5e3h2b/x86/CMakeFiles/edit_cache.dir
+C:/Users/ggust/Projeto2AplicativosMobile/android/app/.cxx/Debug/1a5e3h2b/x86/CMakeFiles/rebuild_cache.dir

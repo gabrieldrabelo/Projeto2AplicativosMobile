@@ -11,6 +11,9 @@ class OrderItem {
     required this.productId,
     required this.quantity,
     required this.totalItem,
+    required String productName,
+    required String unit,
+    required double price,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
@@ -20,6 +23,9 @@ class OrderItem {
       productId: json['idProduto'],
       quantity: json['quantidade']?.toDouble() ?? 0.0,
       totalItem: json['totalItem']?.toDouble() ?? 0.0,
+      productName: '',
+      unit: '',
+      price: 0,
     );
   }
 
@@ -50,6 +56,15 @@ class OrderItem {
       productId: map['productId'],
       quantity: map['quantity'],
       totalItem: map['totalItem'],
+      productName: '',
+      unit: '',
+      price: 0,
     );
   }
+
+  String? get productName => null;
+
+  get unit => null;
+
+  get price => null;
 }

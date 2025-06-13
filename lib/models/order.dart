@@ -20,6 +20,11 @@ class Order {
     this.lastModified,
     this.items = const [],
     this.payments = const [],
+    required String clientName,
+    required String orderDate,
+    required double total,
+    String? notes,
+    required int status,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -40,10 +45,16 @@ class Order {
       clientId: json['idCliente'],
       userId: json['idUsuario'],
       totalOrder: json['totalPedido']?.toDouble() ?? 0.0,
-      creationDate: json['dataCriacao'] ?? json['creationDate'] ?? DateTime.now().toString(),
+      creationDate: json['dataCriacao'] ??
+          json['creationDate'] ??
+          DateTime.now().toString(),
       lastModified: json['ultimaAlteracao'] ?? json['lastModified'],
       items: items,
       payments: payments,
+      clientName: json['name'],
+      orderDate: '',
+      total: json['totalPedido']?.toDouble() ?? 0.0,
+      status: json['status'],
     );
   }
 
@@ -79,6 +90,20 @@ class Order {
       totalOrder: map['totalOrder'],
       creationDate: map['creationDate'],
       lastModified: map['lastModified'],
+      clientName: '',
+      orderDate: '',
+      total: 0,
+      status: 0,
     );
   }
+
+  get orderDate => null;
+
+  double? get total => null;
+
+  int? get status => null;
+
+  get notes => null;
+
+  get clientName => null;
 }

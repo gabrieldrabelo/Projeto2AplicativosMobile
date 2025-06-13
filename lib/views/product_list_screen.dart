@@ -36,11 +36,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
     final _formKey = GlobalKey<FormState>();
     final _nameController = TextEditingController(text: product?.name ?? '');
     final _unitController = TextEditingController(text: product?.unit ?? 'un');
-    final _stockQuantityController = TextEditingController(text: product?.stockQuantity.toString() ?? '0');
-    final _salePriceController = TextEditingController(text: product?.salePrice.toString() ?? '0');
-    final _statusController = TextEditingController(text: product?.status.toString() ?? '0');
-    final _costController = TextEditingController(text: product?.cost?.toString() ?? '');
-    final _barcodeController = TextEditingController(text: product?.barcode ?? '');
+    final _stockQuantityController =
+        TextEditingController(text: product?.stockQuantity.toString() ?? '0');
+    final _salePriceController =
+        TextEditingController(text: product?.salePrice.toString() ?? '0');
+    final _statusController =
+        TextEditingController(text: product?.status.toString() ?? '0');
+    final _costController =
+        TextEditingController(text: product?.cost?.toString() ?? '');
+    final _barcodeController =
+        TextEditingController(text: product?.barcode ?? '');
 
     showDialog(
       context: context,
@@ -70,7 +75,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     DropdownMenuItem(value: 'cx', child: Text('Box (cx)')),
                     DropdownMenuItem(value: 'kg', child: Text('Kilogram (kg)')),
                     DropdownMenuItem(value: 'lt', child: Text('Liter (lt)')),
-                    DropdownMenuItem(value: 'ml', child: Text('Milliliter (ml)')),
+                    DropdownMenuItem(
+                        value: 'ml', child: Text('Milliliter (ml)')),
                   ],
                   onChanged: (value) {
                     _unitController.text = value!;
@@ -84,7 +90,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 ),
                 TextFormField(
                   controller: _stockQuantityController,
-                  decoration: const InputDecoration(labelText: 'Stock Quantity *'),
+                  decoration:
+                      const InputDecoration(labelText: 'Stock Quantity *'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -156,8 +163,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     stockQuantity: double.parse(_stockQuantityController.text),
                     salePrice: double.parse(_salePriceController.text),
                     status: int.parse(_statusController.text),
-                    cost: _costController.text.isNotEmpty ? double.parse(_costController.text) : null,
-                    barcode: _barcodeController.text.isNotEmpty ? _barcodeController.text : null,
+                    cost: _costController.text.isNotEmpty
+                        ? double.parse(_costController.text)
+                        : null,
+                    barcode: _barcodeController.text.isNotEmpty
+                        ? _barcodeController.text
+                        : null,
                   );
                   await _productController.addProduct(newProduct);
                 } else {
@@ -169,8 +180,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     stockQuantity: double.parse(_stockQuantityController.text),
                     salePrice: double.parse(_salePriceController.text),
                     status: int.parse(_statusController.text),
-                    cost: _costController.text.isNotEmpty ? double.parse(_costController.text) : null,
-                    barcode: _barcodeController.text.isNotEmpty ? _barcodeController.text : null,
+                    cost: _costController.text.isNotEmpty
+                        ? double.parse(_costController.text)
+                        : null,
+                    barcode: _barcodeController.text.isNotEmpty
+                        ? _barcodeController.text
+                        : null,
                     lastModified: product.lastModified,
                   );
                   await _productController.updateProduct(updatedProduct);
@@ -250,5 +265,4 @@ class _ProductListScreenState extends State<ProductListScreen> {
       ),
     );
   }
-}
 }

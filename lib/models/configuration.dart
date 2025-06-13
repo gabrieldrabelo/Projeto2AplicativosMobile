@@ -5,6 +5,7 @@ class Configuration {
   Configuration({
     this.id,
     required this.serverUrl,
+    String? lastSync,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,4 +21,6 @@ class Configuration {
       serverUrl: map['serverUrl'],
     );
   }
+
+  String? get lastSync => null;
 }

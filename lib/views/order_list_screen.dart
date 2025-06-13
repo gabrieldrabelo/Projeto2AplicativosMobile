@@ -115,7 +115,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
                   itemBuilder: (context, index) {
                     final order = _orders[index];
                     return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       child: ListTile(
                         title: Text('Order #${order.id}'),
                         subtitle: Column(
@@ -123,15 +124,16 @@ class _OrderListScreenState extends State<OrderListScreen> {
                           children: [
                             Text('Client: ${order.clientName}'),
                             Text('Date: ${order.orderDate}'),
-                            Text('Total: $${order.total.toStringAsFixed(2)}'),
+                            Text('Total: ${order.total?.toStringAsFixed(2)}'),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: _getOrderStatusColor(order.status),
+                                color: _getOrderStatusColor(order.status!),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                _getOrderStatusText(order.status),
+                                _getOrderStatusText(order.status!),
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),
@@ -142,7 +144,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.edit),
-                              onPressed: () => _navigateToOrderForm(order: order),
+                              onPressed: () =>
+                                  _navigateToOrderForm(order: order),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),

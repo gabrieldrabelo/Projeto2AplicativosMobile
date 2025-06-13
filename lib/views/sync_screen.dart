@@ -12,7 +12,7 @@ class SyncScreen extends StatefulWidget {
 class _SyncScreenState extends State<SyncScreen> {
   final SyncController _syncController = SyncController();
   final ConfigurationController _configController = ConfigurationController();
-  
+
   bool _isSyncing = false;
   String _syncStatus = '';
   String _lastSyncDate = 'Never';
@@ -38,7 +38,9 @@ class _SyncScreenState extends State<SyncScreen> {
   Future<void> _syncData() async {
     if (_serverUrl.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Server URL not configured. Please set it in the Configuration screen.')),
+        const SnackBar(
+            content: Text(
+                'Server URL not configured. Please set it in the Configuration screen.')),
       );
       return;
     }
@@ -156,7 +158,8 @@ class _SyncScreenState extends State<SyncScreen> {
                             ? const SizedBox(
                                 height: 20,
                                 width: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
                               )
                             : const Text('Sync Now'),
                       ),
@@ -182,7 +185,8 @@ class _SyncScreenState extends State<SyncScreen> {
                   itemCount: _syncLog.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       child: Text(_syncLog[index]),
                     );
                   },
