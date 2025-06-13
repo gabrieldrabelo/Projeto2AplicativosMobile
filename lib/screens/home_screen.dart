@@ -3,6 +3,8 @@ import 'cliente_list_screen.dart';
 import 'produto_list_screen.dart';
 import 'usuario_list_screen.dart';
 import '../views/order_form_screen.dart';
+import '../views/configuration_screen.dart';
+import '../views/sync_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -67,13 +69,37 @@ class HomeScreen extends StatelessWidget {
             ),
             _buildMenuCard(
               context,
-              'Usuu00e1rios',
+              'Usuários',
               Icons.person,
               Colors.purple,
               () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const UsuarioListScreen(),
+                ),
+              ),
+            ),
+            _buildMenuCard(
+              context,
+              'Configuração',
+              Icons.settings,
+              Colors.grey,
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ConfigurationScreen(),
+                ),
+              ),
+            ),
+            _buildMenuCard(
+              context,
+              'Sincronização',
+              Icons.sync,
+              Colors.teal,
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SyncScreen(),
                 ),
               ),
             ),
@@ -99,11 +125,11 @@ class HomeScreen extends StatelessWidget {
               size: 48,
               color: color,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Text(
               title,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -113,3 +139,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+  

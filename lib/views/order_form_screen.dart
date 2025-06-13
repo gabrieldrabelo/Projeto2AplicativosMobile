@@ -466,9 +466,9 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text(
+                                      const Text(
                                         '\${(item.quantity * item.price).toStringAsFixed(2)}',
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.delete),
@@ -490,18 +490,18 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                     // Total
                     Card(
                       color: Colors.grey[200],
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               'Total:',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
                               '\${_total.toStringAsFixed(2)}',
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -547,9 +547,9 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text(
+                                      const Text(
                                         '\${payment.amount.toStringAsFixed(2)}',
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.delete),

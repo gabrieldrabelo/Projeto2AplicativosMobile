@@ -33,18 +33,18 @@ class _ClientListScreenState extends State<ClientListScreen> {
   }
 
   void _showClientForm({Client? client}) {
-    final _formKey = GlobalKey<FormState>();
-    final _nameController = TextEditingController(text: client?.name ?? '');
-    final _typeController = TextEditingController(text: client?.type ?? 'F');
-    final _cpfCnpjController = TextEditingController(text: client?.cpfCnpj ?? '');
-    final _emailController = TextEditingController(text: client?.email ?? '');
-    final _phoneController = TextEditingController(text: client?.phone ?? '');
-    final _zipCodeController = TextEditingController(text: client?.zipCode ?? '');
-    final _addressController = TextEditingController(text: client?.address ?? '');
-    final _neighborhoodController = TextEditingController(text: client?.neighborhood ?? '');
-    final _cityController = TextEditingController(text: client?.city ?? '');
-    final _stateController = TextEditingController(text: client?.state ?? '');
-    bool _isSearchingZipCode = false;
+    final formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController(text: client?.name ?? '');
+    final typeController = TextEditingController(text: client?.type ?? 'F');
+    final cpfCnpjController = TextEditingController(text: client?.cpfCnpj ?? '');
+    final emailController = TextEditingController(text: client?.email ?? '');
+    final phoneController = TextEditingController(text: client?.phone ?? '');
+    final zipCodeController = TextEditingController(text: client?.zipCode ?? '');
+    final addressController = TextEditingController(text: client?.address ?? '');
+    final neighborhoodController = TextEditingController(text: client?.neighborhood ?? '');
+    final cityController = TextEditingController(text: client?.city ?? '');
+    final stateController = TextEditingController(text: client?.state ?? '');
+    bool isSearchingZipCode = false;
 
     showDialog(
       context: context,
@@ -53,12 +53,12 @@ class _ClientListScreenState extends State<ClientListScreen> {
           title: Text(client == null ? 'Add Client' : 'Edit Client'),
           content: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    controller: _nameController,
+                    controller: nameController,
                     decoration: const InputDecoration(labelText: 'Name *'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -68,14 +68,14 @@ class _ClientListScreenState extends State<ClientListScreen> {
                     },
                   ),
                   DropdownButtonFormField<String>(
-                    value: _typeController.text,
+                    value: typeController.text,
                     decoration: const InputDecoration(labelText: 'Type *'),
                     items: const [
                       DropdownMenuItem(value: 'F', child: Text('Physical (F)')),
                       DropdownMenuItem(value: 'J', child: Text('Legal (J)')),
                     ],
                     onChanged: (value) {
-                      _typeController.text = value!;
+                      typeController.text = value!;
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -85,7 +85,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
                     },
                   ),
                   TextFormField(
-                    controller: _cpfCnpjController,
+                    controller: cpfCnpjController,
                     decoration: const InputDecoration(labelText: 'CPF/CNPJ *'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -95,43 +95,43 @@ class _ClientListScreenState extends State<ClientListScreen> {
                     },
                   ),
                   TextFormField(
-                    controller: _emailController,
+                    controller: emailController,
                     decoration: const InputDecoration(labelText: 'Email'),
                   ),
                   TextFormField(
-                    controller: _phoneController,
+                    controller: phoneController,
                     decoration: const InputDecoration(labelText: 'Phone'),
                   ),
                   Row(
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _zipCodeController,
+                          controller: zipCodeController,
                           decoration: const InputDecoration(labelText: 'ZIP Code'),
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _isSearchingZipCode
+                      isSearchingZipCode
                           ? const CircularProgressIndicator()
                           : IconButton(
                               icon: const Icon(Icons.search),
                               onPressed: () async {
-                                if (_zipCodeController.text.isNotEmpty) {
+                                if (zipCodeController.text.isNotEmpty) {
                                   setState(() {
-                                    _isSearchingZipCode = true;
+                                    isSearchingZipCode = true;
                                   });
                                   
-                                  final address = await _clientController.searchAddressByZipCode(_zipCodeController.text);
+                                  final address = await _clientController.searchAddressByZipCode(zipCodeController.text);
                                   
                                   setState(() {
-                                    _isSearchingZipCode = false;
+                                    isSearchingZipCode = false;
                                   });
                                   
                                   if (address != null) {
-                                    _addressController.text = address['address'] ?? '';
-                                    _neighborhoodController.text = address['neighborhood'] ?? '';
-                                    _cityController.text = address['city'] ?? '';
-                                    _stateController.text = address['state'] ?? '';
+                                    addressController.text = address['address'] ?? '';
+                                    neighborhoodController.text = address['neighborhood'] ?? '';
+                                    cityController.text = address['city'] ?? '';
+                                    stateController.text = address['state'] ?? '';
                                     
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text('Address found!')),
@@ -147,19 +147,19 @@ class _ClientListScreenState extends State<ClientListScreen> {
                     ],
                   ),
                   TextFormField(
-                    controller: _addressController,
+                    controller: addressController,
                     decoration: const InputDecoration(labelText: 'Address'),
                   ),
                   TextFormField(
-                    controller: _neighborhoodController,
+                    controller: neighborhoodController,
                     decoration: const InputDecoration(labelText: 'Neighborhood'),
                   ),
                   TextFormField(
-                    controller: _cityController,
+                    controller: cityController,
                     decoration: const InputDecoration(labelText: 'City'),
                   ),
                   TextFormField(
-                    controller: _stateController,
+                    controller: stateController,
                     decoration: const InputDecoration(labelText: 'State'),
                   ),
                 ],
@@ -173,36 +173,36 @@ class _ClientListScreenState extends State<ClientListScreen> {
             ),
             TextButton(
               onPressed: () async {
-                if (_formKey.currentState!.validate()) {
+                if (formKey.currentState!.validate()) {
                   if (client == null) {
                     // Add new client
                     final newClient = Client(
-                      name: _nameController.text,
-                      type: _typeController.text,
-                      cpfCnpj: _cpfCnpjController.text,
-                      email: _emailController.text,
-                      phone: _phoneController.text,
-                      zipCode: _zipCodeController.text,
-                      address: _addressController.text,
-                      neighborhood: _neighborhoodController.text,
-                      city: _cityController.text,
-                      state: _stateController.text,
+                      name: nameController.text,
+                      type: typeController.text,
+                      cpfCnpj: cpfCnpjController.text,
+                      email: emailController.text,
+                      phone: phoneController.text,
+                      zipCode: zipCodeController.text,
+                      address: addressController.text,
+                      neighborhood: neighborhoodController.text,
+                      city: cityController.text,
+                      state: stateController.text,
                     );
                     await _clientController.addClient(newClient);
                   } else {
                     // Update existing client
                     final updatedClient = Client(
                       id: client.id,
-                      name: _nameController.text,
-                      type: _typeController.text,
-                      cpfCnpj: _cpfCnpjController.text,
-                      email: _emailController.text,
-                      phone: _phoneController.text,
-                      zipCode: _zipCodeController.text,
-                      address: _addressController.text,
-                      neighborhood: _neighborhoodController.text,
-                      city: _cityController.text,
-                      state: _stateController.text,
+                      name: nameController.text,
+                      type: typeController.text,
+                      cpfCnpj: cpfCnpjController.text,
+                      email: emailController.text,
+                      phone: phoneController.text,
+                      zipCode: zipCodeController.text,
+                      address: addressController.text,
+                      neighborhood: neighborhoodController.text,
+                      city: cityController.text,
+                      state: stateController.text,
                       lastModified: client.lastModified,
                     );
                     await _clientController.updateClient(updatedClient);
