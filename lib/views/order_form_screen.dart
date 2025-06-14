@@ -41,48 +41,50 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
     _loadData();
   }
 
-  Future<void> _loadData() async {
-    setState(() {
-      _isLoading = true;
-    });
+ Future<void> _loadData() async {
+  setState(() {
+    _isLoading = true;
+  });
 
-    // Load clients and products
-    final clients = await _clientController.getClients();
-    final products = await _productController.getProducts();
+  final clients = await _clientController.getClients();
+  final products = await _productController.getProducts();
 
-    setState(() {
-      _clients = clients;
-      _products = products;
-    });
+  setState(() {
+    _clients = clients;
+    _products = products;
+  });
 
-    // If editing an existing order, load its data
-    if (widget.order != null) {
-      final order = widget.order!;
-      final orderItems = await _orderController.getOrderItems(order.id!);
-      final orderPayments = await _orderController.getOrderPayments(order.id!);
-
+  if (widget.order != null) {
+    final order = await _orderController.getOrderById(widget.order!.id!);
+    if (order != null) {
       setState(() {
-        _selectedClient = _clients.firstWhere(
-          (client) => client.id == order.clientId,
-          orElse: () => _clients.isNotEmpty ? _clients.first : Client(
+        if (_clients.isNotEmpty) {
+          _selectedClient = _clients.firstWhere(
+            (client) => client.id == order.clientId,
+            orElse: () => _clients.first,
+          );
+        } else {
+          _selectedClient = Client(
             id: 0,
             name: 'Selecione um cliente',
             type: 'F',
             cpfCnpj: '',
-          ),
-        );
-        _orderItems = orderItems;
-        _orderPayments = orderPayments;
+          );
+        }
+        _orderItems = order.items;
+        _orderPayments = order.payments;
         _total = order.totalOrder;
         _status = order.status;
         _notes = order.notes ?? '';
       });
+      _updateTotal();
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
+
+  setState(() {
+    _isLoading = false;
+  });
+}
 
   void _updateTotal() {
     double total = 0.0;
@@ -121,7 +123,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                     setState(() {
                       selectedProduct = value;
                       if (value != null) {
-                        price = value.salePrice ?? value.price;
+                        price = value.salePrice;
                       }
                     });
                   },
@@ -462,24 +464,28 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                 child: ListTile(
                                   title: Text(item.productName ?? 'Produto'),
                                   subtitle: Text(
-                                      '${item.quantity} ${item.unit} x \${item.price.toStringAsFixed(2)}'),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                        '\${(item.quantity * item.price).toStringAsFixed(2)}',
-                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () {
-                                          setState(() {
-                                            _orderItems.removeAt(index);
-                                            _updateTotal();
-                                          });
-                                        },
-                                      ),
-                                    ],
+                                      '${item.quantity} ${item.unit} x R\$${item.price.toStringAsFixed(2)}'),
+                                  trailing: SizedBox(
+                                    width: 120,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'R\$${(item.quantity * item.price).toStringAsFixed(2)}',
+                                          style: const TextStyle(fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {
+                                            setState(() {
+                                              _orderItems.removeAt(index);
+                                              _updateTotal();
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -490,18 +496,18 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                     // Total
                     Card(
                       color: Colors.grey[200],
-                      child: const Padding(
-                        padding: EdgeInsets.all(16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'Total:',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              '\${_total.toStringAsFixed(2)}',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              'R\$${_total.toStringAsFixed(2)}',
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -547,9 +553,9 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Text(
-                                        '\${payment.amount.toStringAsFixed(2)}',
-                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      Text(
+                                        'R\$${payment.value.toStringAsFixed(2)}',
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.delete),

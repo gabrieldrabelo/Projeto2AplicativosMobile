@@ -238,7 +238,6 @@ class SyncController {
                 code: '', 
                 name: '', 
                 unit: '', 
-                price: 0, 
                 stock: 0, 
                 salePrice: 0, stockQuantity: 0, status: 0
               ),

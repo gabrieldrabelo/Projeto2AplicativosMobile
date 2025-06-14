@@ -55,7 +55,7 @@ class _ProdutoListScreenState extends State<ProdutoListScreen> {
     final nameController = TextEditingController(text: produto?.name ?? '');
     final unitController = TextEditingController(text: produto?.unit ?? '');
     final priceController = TextEditingController(
-        text: produto?.price != null ? produto!.price.toString() : '');
+        text: produto?.salePrice != null ? produto!.salePrice.toString() : '');
     final stockController = TextEditingController(
         text: produto?.stock != null ? produto!.stock.toString() : '');
     final descriptionController =
@@ -121,7 +121,7 @@ class _ProdutoListScreenState extends State<ProdutoListScreen> {
                   code: codeController.text,
                   name: nameController.text,
                   unit: unitController.text,
-                  price: double.tryParse(priceController.text) ?? 0.0,
+                  salePrice: double.tryParse(priceController.text) ?? 0.0,
                   stock: double.tryParse(stockController.text) ?? 0.0,
                   description: descriptionController.text.isNotEmpty
                       ? descriptionController.text
@@ -242,7 +242,7 @@ class _ProdutoListScreenState extends State<ProdutoListScreen> {
                                 children: [
                                   Text('Cu00f3digo: ${produto.code}'),
                                   Text(
-                                      'Preu00e7o: ${FormatUtils.formatCurrency(produto.price)}'),
+                                      'Preu00e7o: ${FormatUtils.formatCurrency(produto.salePrice)}'),
                                   Text(
                                       'Estoque: ${produto.stock} ${produto.unit}'),
                                 ],

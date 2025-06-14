@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'cliente_list_screen.dart';
-import 'produto_list_screen.dart';
-import 'usuario_list_screen.dart';
+import '../views/client_list_screen.dart';
+import '../views/product_list_screen.dart';
+import '../views/user_list_screen.dart';
 import '../views/order_form_screen.dart';
+import '../views/order_list_screen.dart';
 import '../views/configuration_screen.dart';
 import '../views/sync_screen.dart';
 
@@ -39,7 +40,7 @@ class HomeScreen extends StatelessWidget {
               () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ClienteListScreen(),
+                  builder: (context) => const ClientListScreen(),
                 ),
               ),
             ),
@@ -51,7 +52,7 @@ class HomeScreen extends StatelessWidget {
               () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProdutoListScreen(),
+                  builder: (context) => const ProductListScreen(),
                 ),
               ),
             ),
@@ -69,13 +70,25 @@ class HomeScreen extends StatelessWidget {
             ),
             _buildMenuCard(
               context,
+              'Lista de Pedidos',
+              Icons.list_alt,
+              Colors.deepOrange,
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrderListScreen(),
+                ),
+              ),
+            ),
+            _buildMenuCard(
+              context,
               'Usuários',
               Icons.person,
               Colors.purple,
               () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const UsuarioListScreen(),
+                  builder: (context) => const UserListScreen(),
                 ),
               ),
             ),

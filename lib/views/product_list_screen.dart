@@ -160,7 +160,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     salePrice: double.parse(salePriceController.text),
                     status: int.parse(statusController.text),
                     cost: costController.text.isNotEmpty ? double.parse(costController.text) : null,
-                    barcode: barcodeController.text.isNotEmpty ? barcodeController.text : null, code: '', price: 0, stock: 0,
+                    barcode: barcodeController.text.isNotEmpty ? barcodeController.text : null, code: '', stock: double.parse(stockQuantityController.text),
                   );
                   await _productController.addProduct(newProduct);
                 } else {
@@ -174,7 +174,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     status: int.parse(statusController.text),
                     cost: costController.text.isNotEmpty ? double.parse(costController.text) : null,
                     barcode: barcodeController.text.isNotEmpty ? barcodeController.text : null,
-                    lastModified: product.lastModified, code: '', price: 0, stock: 0,
+                    lastModified: product.lastModified, code: '', stock: 0,
                   );
                   await _productController.updateProduct(updatedProduct);
                 }

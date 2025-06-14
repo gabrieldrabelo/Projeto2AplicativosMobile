@@ -71,35 +71,35 @@ class _OrderListScreenState extends State<OrderListScreen> {
     );
   }
 
-  String _getOrderStatusText(int status) {
-    switch (status) {
-      case 0:
-        return 'Draft';
-      case 1:
-        return 'Confirmed';
-      case 2:
-        return 'Delivered';
-      case 3:
-        return 'Canceled';
-      default:
-        return 'Unknown';
-    }
+String _getOrderStatusText(String status) {
+  switch (status) {
+    case 'draft':
+      return 'Draft';
+    case 'confirmed':
+      return 'Confirmed';
+    case 'delivered':
+      return 'Delivered';
+    case 'canceled':
+      return 'Canceled';
+    default:
+      return 'Unknown';
   }
+}
 
-  Color _getOrderStatusColor(int status) {
-    switch (status) {
-      case 0:
-        return Colors.grey;
-      case 1:
-        return Colors.blue;
-      case 2:
-        return Colors.green;
-      case 3:
-        return Colors.red;
-      default:
-        return Colors.black;
-    }
+  Color _getOrderStatusColor(String status) {
+  switch (status) {
+    case 'draft':
+      return Colors.grey;
+    case 'confirmed':
+      return Colors.blue;
+    case 'delivered':
+      return Colors.green;
+    case 'canceled':
+      return Colors.red;
+    default:
+      return Colors.black;
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -118,21 +118,21 @@ class _OrderListScreenState extends State<OrderListScreen> {
                     return Card(
                       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: ListTile(
-                        title: Text('Order #${order.id}'),
+                        title: Text('Pedido #${order.id}'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Client: ${order.clientName}'),
-                            Text('Date: ${order.orderDate}'),
+                            Text('Cliente: ${order.clientName}'),
+                            Text('Data: ${order.orderDate}'),
                             Text('Total: ${order.total.toStringAsFixed(2)}'),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: _getOrderStatusColor(order.status as int),
+                                color: _getOrderStatusColor(order.status),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                _getOrderStatusText(order.status as int),
+                                _getOrderStatusText(order.status),
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),

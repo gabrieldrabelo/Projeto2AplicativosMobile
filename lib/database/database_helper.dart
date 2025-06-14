@@ -20,7 +20,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2, // Incrementado para versão 2 devido às alterações no schema
+      version: 9, // Incrementado para versão 8 para adicionar coluna description na tabela products
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -59,14 +59,17 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT NOT NULL,
         name TEXT NOT NULL,
         unit TEXT NOT NULL,
         stockQuantity REAL NOT NULL,
         salePrice REAL NOT NULL,
+        stock INTEGER NOT NULL,
         status INTEGER NOT NULL,
         cost REAL,
         barcode TEXT,
-        lastModified TEXT
+        lastModified TEXT,
+        description TEXT
       )
     ''');
 
@@ -137,20 +140,63 @@ class DatabaseHelper {
 
   Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < newVersion) {
-      // Add upgrade logic for database schema changes
       if (oldVersion == 1 && newVersion >= 2) {
         // Add new columns to orders table
         await db.execute('ALTER TABLE orders ADD COLUMN notes TEXT');
         await db.execute('ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT \'draft\'');
-        
+
         // Add new columns to order_items table
         await db.execute('ALTER TABLE order_items ADD COLUMN productName TEXT');
         await db.execute('ALTER TABLE order_items ADD COLUMN price REAL NOT NULL DEFAULT 0.0');
         await db.execute('ALTER TABLE order_items ADD COLUMN unit TEXT NOT NULL DEFAULT \'un\'');
-        
+
         // Add new columns to order_payments table
         await db.execute('ALTER TABLE order_payments ADD COLUMN paymentType TEXT NOT NULL DEFAULT \'Dinheiro\'');
         await db.execute('ALTER TABLE order_payments ADD COLUMN description TEXT');
+      }
+
+      if (oldVersion == 2 && newVersion >= 3) {
+        // Check if columns already exist before adding
+        var columns = await db.rawQuery("PRAGMA table_info(products)");
+        var columnNames = columns.map((c) => c['name'] as String).toList();
+        if (!columnNames.contains('code')) {
+          await db.execute('ALTER TABLE products ADD COLUMN description TEXT  \'\'');
+        }
+        if (!columnNames.contains('code')) {
+          await db.execute('ALTER TABLE products ADD COLUMN code TEXT NOT NULL DEFAULT \'\'');
+        }
+
+        if (!columnNames.contains('status')) {
+          await db.execute('ALTER TABLE products ADD COLUMN status INTEGER NOT NULL DEFAULT 1');
+        }
+      }
+
+      if (oldVersion < 4 && newVersion >= 4) {
+        // Add stock column if it does not exist
+        var columns = await db.rawQuery("PRAGMA table_info(products)");
+        var columnNames = columns.map((c) => c['name'] as String).toList();
+        if (!columnNames.contains('stock')) {
+          await db.execute('ALTER TABLE products ADD COLUMN stock INTEGER NOT NULL DEFAULT 0');
+        }
+      }
+      if (oldVersion < 5 && newVersion >= 5) {
+        // Add description column if it does not exist
+        var columns = await db.rawQuery("PRAGMA table_info(products)");
+        var columnNames = columns.map((c) => c['name'] as String).toList();
+        if (!columnNames.contains('description')) {
+          await db.execute('ALTER TABLE products ADD COLUMN description TEXT');
+        }
+      }
+
+
+      if (oldVersion == 3 && newVersion >= 4) {
+        // Add stock column to products table if it does not exist
+        var columns = await db.rawQuery("PRAGMA table_info(products)");
+        var columnNames = columns.map((c) => c['name'] as String).toList();
+
+        if (!columnNames.contains('stock')) {
+          await db.execute('ALTER TABLE products ADD COLUMN stock INTEGER NOT NULL DEFAULT 0');
+        }
       }
     }
   }
@@ -158,6 +204,9 @@ class DatabaseHelper {
   // Generic methods for CRUD operations
   Future<int> insert(String table, Map<String, dynamic> data) async {
     final db = await instance.database;
+    if (table == 'products' && !data.containsKey('stock')) {
+      data['stock'] = 0;
+    }
     return await db.insert(table, data);
   }
 

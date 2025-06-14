@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Dica: Se nu00e3o houver usuu00e1rios cadastrados, use admin/admin',
+                  'Dica: Se não houver usuarios cadastrados, use admin/admin',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey),
                 ),

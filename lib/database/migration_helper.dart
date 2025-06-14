@@ -33,7 +33,7 @@ class MigrationHelper {
           'order_items',
           {
             'productName': product.name,
-            'price': product.salePrice ?? product.price,
+            'price': product.salePrice,
             'unit': product.unit,
           },
           where: 'id = ?',

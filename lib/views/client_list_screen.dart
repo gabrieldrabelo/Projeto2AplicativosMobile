@@ -50,7 +50,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: Text(client == null ? 'Add Client' : 'Edit Client'),
+          title: Text(client == null ? 'Adicionar Cliente' : 'Editar Cliente'),
           content: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -59,27 +59,27 @@ class _ClientListScreenState extends State<ClientListScreen> {
                 children: [
                   TextFormField(
                     controller: nameController,
-                    decoration: const InputDecoration(labelText: 'Name *'),
+                    decoration: const InputDecoration(labelText: 'Nome *'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a name';
+                        return 'Por favor insira um nome';
                       }
                       return null;
                     },
                   ),
                   DropdownButtonFormField<String>(
                     value: typeController.text,
-                    decoration: const InputDecoration(labelText: 'Type *'),
+                    decoration: const InputDecoration(labelText: 'Tipo *'),
                     items: const [
-                      DropdownMenuItem(value: 'F', child: Text('Physical (F)')),
-                      DropdownMenuItem(value: 'J', child: Text('Legal (J)')),
+                      DropdownMenuItem(value: 'F', child: Text('Fisica (F)')),
+                      DropdownMenuItem(value: 'J', child: Text('Juridica (J)')),
                     ],
                     onChanged: (value) {
                       typeController.text = value!;
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please select a type';
+                        return 'Por favor selecione um tipo';
                       }
                       return null;
                     },
@@ -89,7 +89,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
                     decoration: const InputDecoration(labelText: 'CPF/CNPJ *'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter CPF/CNPJ';
+                        return 'Por favor insira um CPF/CNPJ';
                       }
                       return null;
                     },
@@ -100,14 +100,14 @@ class _ClientListScreenState extends State<ClientListScreen> {
                   ),
                   TextFormField(
                     controller: phoneController,
-                    decoration: const InputDecoration(labelText: 'Phone'),
+                    decoration: const InputDecoration(labelText: 'Telefone'),
                   ),
                   Row(
                     children: [
                       Expanded(
                         child: TextFormField(
                           controller: zipCodeController,
-                          decoration: const InputDecoration(labelText: 'ZIP Code'),
+                          decoration: const InputDecoration(labelText: 'Cep'),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -134,11 +134,11 @@ class _ClientListScreenState extends State<ClientListScreen> {
                                     stateController.text = address['state'] ?? '';
                                     
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Address found!')),
+                                      const SnackBar(content: Text('Endereço encontrado!')),
                                     );
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Address not found')),
+                                      const SnackBar(content: Text('Endereço não encontrado')),
                                     );
                                   }
                                 }
@@ -148,19 +148,19 @@ class _ClientListScreenState extends State<ClientListScreen> {
                   ),
                   TextFormField(
                     controller: addressController,
-                    decoration: const InputDecoration(labelText: 'Address'),
+                    decoration: const InputDecoration(labelText: 'Endereço'),
                   ),
                   TextFormField(
                     controller: neighborhoodController,
-                    decoration: const InputDecoration(labelText: 'Neighborhood'),
+                    decoration: const InputDecoration(labelText: 'Bairro'),
                   ),
                   TextFormField(
                     controller: cityController,
-                    decoration: const InputDecoration(labelText: 'City'),
+                    decoration: const InputDecoration(labelText: 'Cidade'),
                   ),
                   TextFormField(
                     controller: stateController,
-                    decoration: const InputDecoration(labelText: 'State'),
+                    decoration: const InputDecoration(labelText: 'Estado'),
                   ),
                 ],
               ),
@@ -169,7 +169,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text('Cancelar'),
             ),
             TextButton(
               onPressed: () async {
@@ -211,7 +211,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
                   _loadClients();
                 }
               },
-              child: const Text('Save'),
+              child: const Text('Salvar'),
             ),
           ],
         ),
@@ -223,12 +223,12 @@ class _ClientListScreenState extends State<ClientListScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: Text('Are you sure you want to delete ${client.name}?'),
+        title: const Text('Confirme exclusão'),
+        content: Text('Você deseja excluir ${client.name}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('Cancelar'),
           ),
           TextButton(
             onPressed: () async {
@@ -236,7 +236,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
               Navigator.pop(context);
               _loadClients();
             },
-            child: const Text('Delete'),
+            child: const Text('Deletar'),
           ),
         ],
       ),
@@ -259,7 +259,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
                     final client = _clients[index];
                     return ListTile(
                       title: Text(client.name),
-                      subtitle: Text('${client.type == 'F' ? 'Physical' : 'Legal'} - ${client.cpfCnpj}'),
+                      subtitle: Text('${client.type == 'F' ? 'Fisica' : 'Juridica'} - ${client.cpfCnpj}'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
